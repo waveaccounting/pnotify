@@ -504,6 +504,14 @@
 
 			// Display the notice.
 			pnotify.pnotify_display = function() {
+				// Remove oldest notifications leaving only opts.maxonscreen on screen
+				notices_data = jwindow.data("pnotify");
+				if (notices_data && (notices_data.length > opts.maxonscreen)) {
+					$.each(notices_data.slice(0, notices_data.length - opts.maxonscreen), function(){
+						if (this.pnotify_remove)
+							this.pnotify_remove();
+						});
+					};
 				// If the notice is not in the DOM, append it.
 				if (!pnotify.parent().length)
 					pnotify.appendTo(body);
@@ -872,6 +880,8 @@
 		nonblock_opacity: .2,
 		// Display a pull down menu to redisplay previous notices, and place the notice in the history.
 		history: true,
+		// Maximum number of notifications to have onscreen
+		maxonscreen: Infinity,
 		// Width of the notice.
 		width: "300px",
 		// Minimum height of the notice. It will expand to fit content.
